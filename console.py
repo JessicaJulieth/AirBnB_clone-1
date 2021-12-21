@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+from posixpath import split
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -37,11 +38,10 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
-
         Usage: <class name>.<command>([<id> [<*args> or <**kwargs>]])
         (Brackets denote optional fields in usage example.)
         """
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                = _cls = _id = _args = ''  # initialize line elements
+        _cmd = _cls = _id = _args = ''  # initialize line elements
 
         # scan for general formating - i.e '.', '(', ')'
         if not ('.' in line and '(' in line and ')' in line):
@@ -115,16 +115,32 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        arguments = args.split()
+
+        if len(arguments) == 0:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif arguments[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+
+        instance = HBNBCommand.classes[arguments[0]]()
+        if len(arguments) >= 2:
+            for par in arguments[1:]:
+                key, value = par.split('=')
+                if value[0] == '"':
+                    value = value.replace('"', '')
+                    value = value.replace('_', ' ')
+                else:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        value = float(value)
+                setattr(instance, key, value)
+
+        print(instance.id)
         storage.save()
-        print(new_instance.id)
-        storage.save()
+        instance.save()
 
     def help_create(self):
         """ Help information for the create method """
