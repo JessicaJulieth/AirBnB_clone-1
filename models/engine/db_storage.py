@@ -2,7 +2,7 @@
 """DBStorage storage engine"""
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, Session
 from os import getenv
 from models.base_model import Base, BaseModel
 from models.state import State
@@ -25,7 +25,7 @@ class DBStorage():
         hst = getenv("HBNB_MYSQL_HOST")
         db = getenv("HBNB_MYSQL_DB")  # Database
 
-        self.engine = create_engine(
+        self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'.format(
                 usr, pswrd, hst, db), pool_pre_ping=True)
 
@@ -48,6 +48,7 @@ class DBStorage():
     def reload(self):
         """Reload the database session"""
         Base.metadata.create_all(self.__engine)
-        Session = scoped_session(sessionmaker(
-            bind=self.__engine, expire_on_commit=False))
-        self.__session = Session()
+        
+        Session = sessionmaker(
+            bind=self.__engine, expire_on_commit=False)
+        self.__session = scoped_session(Session)
