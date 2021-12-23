@@ -47,14 +47,20 @@ class DBStorage():
 
     def all(self, cls=None):
         """all method from the current database session"""
+
         n_list = []
-        obj_list = [User, Amenity, Review, State, City, Place]
+        obj_dict = {"User": User,
+                    "Amenity": Amenity,
+                    "Review": Review,
+                    "State": State,
+                    "Place": Place
+                    }
 
         if cls is None:
-            for class_name in obj_list:
-                n_list += self.__session.query(class_name).all()
+            for class_name in obj_dict:
+                n_list += self.__session.query(obj_dict[class_name]).all()
         else:
-            n_list += self.__session.query(cls).all()
+            n_list += self.__session.query(obj_dict[cls]).all()
 
         n_dict = {}
         for obj in n_list:
