@@ -47,26 +47,27 @@ class DBStorage():
 
     def all(self, cls=None):
         """all method from the current database session"""
-
-        n_list = []
+        new_dict = {}
         obj_dict = {"User": User,
                     "Amenity": Amenity,
                     "Review": Review,
                     "State": State,
-                    "Place": Place
+                    "Place": Place,
+                    "City": City
                     }
 
         if cls is None:
             for class_name in obj_dict:
-                n_list += self.__session.query(obj_dict[class_name]).all()
-        else:
-            n_list += self.__session.query(obj_dict[cls]).all()
-
-        n_dict = {}
-        for obj in n_list:
-            key = obj.__class__.__name__ + '.' + str(obj.id)
-            n_dict[key] = obj
-        return n_dict
+                data = self.__session.query(obj_dict[class_name]).all()
+                for obj in data:
+                    new_dict[f"{obj.__class__.__name__}.{obj.id}"] = obj
+        elif (cls in obj_dict):
+            data = self.__session.query(obj_dict[cls]).all()
+            for obj in data:
+                new_dict[f"{obj.id}"] = obj
+        print(type(new_dict))
+        print("Entra")
+        return new_dict
 
     def reload(self):
         """Reload the database session"""

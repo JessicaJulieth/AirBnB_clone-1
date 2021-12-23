@@ -21,9 +21,9 @@ class FileStorage:
             return FileStorage.__objects
         else:
             obj_class = {}
-            for key, val in self.__objects.items():
-                if cls == val.__class__:
-                    obj_class[key] = val
+            for key, val in FileStorage.__objects.items():
+                if cls.__name__ == val.__class__.__name__:
+                    obj_class[key] = FileStorage.__objects[key]
             return obj_class
 
     def new(self, obj):
