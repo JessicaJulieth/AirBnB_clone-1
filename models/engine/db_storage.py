@@ -44,14 +44,28 @@ class DBStorage():
         """delete from the current database session"""
         if obj is not None:
             self.__session.delete(obj)
-            
+
     def all(self, cls=None):
-       
+        """all method from the current database session"""
+        n_list = []
+        obj_list = [User, Amenity, Review, State, City, Place]
+
+        if cls is None:
+            for class_name in obj_list:
+                n_list += self.__session.query(class_name).all()
+        else:
+            n_list += self.__session.query(cls).all()
+
+        n_dict = {}
+        for obj in n_list:
+            key = obj.__class__.__name__ + '.' + str(obj.id)
+            n_dict[key] = obj
+        return n_dict
 
     def reload(self):
         """Reload the database session"""
         Base.metadata.create_all(self.__engine)
-        
+
         Session = sessionmaker(
             bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(Session)
