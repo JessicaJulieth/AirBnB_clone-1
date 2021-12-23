@@ -11,12 +11,12 @@ class Place(BaseModel, Base):
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False) # ahh bueno, y acá lleva otro ForeignKey
     name = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=False)
-    number_rooms = Column(Integer, nullable=False) #Aquí se usa un type de sqlalchemy que es Integer
-    number_bathrooms = 0
-    max_guest = 0
-    price_by_night = 0
-    latitude = 0.0
-    longitude = 0.0
+    number_rooms = Column(Integer, nullable=False, default=0) #Aquí se usa un type de sqlalchemy que es Integer
+    number_bathrooms = Column(Integer, nullable=False, default=0)
+    max_guest = Column(Integer, nullable=False, default=0)
+    price_by_night = Column(Integer, nullable=False, default=0)
+    latitude = Column(float, nullable=False)
+    longitude = Column(float, nullable=False)
     amenity_ids = []
 
     # Para que la consola funcione como necesitamos, que funcione con mysql, primero necesitamos declarar las variables de entorno en este pc
