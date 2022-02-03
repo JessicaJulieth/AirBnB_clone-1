@@ -31,11 +31,12 @@ def c(text):
     return "C {}".format(text.replace('_', ' '))
 
 
-@app.route("/python/(<text>)", strict_slashes=False)
-def python_is(text="is cool"):
+@app.route("/python/<text>", strict_slashes=False)
+def python_is(text):
     """
     Returns:The default value of text is “is cool”
     """
+    text = "is cool"
     return "Python {}".format(text.replace('_', ' '))
 
 
